@@ -21,7 +21,7 @@ jobs:
       with:
         switches: -avzr
         path: target/x86_64-unknown-linux-gnu/release/mudlarking-server
-        remote_path: /root/mudlarking_server
+        remote_path: /home/github-deploy/mudlarking_server/
         remote_host: worldenddisk.com
         remote_user: ${{ secrets.SSH_USER }}
         remote_key: ${{ secrets.SSH_KEY }}
