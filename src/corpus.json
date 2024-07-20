@@ -2,30 +2,32 @@
     "waste": [
         {
             "text": "mud",
-            "weight": 20
+            "weight": 40
         },
         {
             "text": "sand",
-            "weight": 2
+            "weight": 4
         },
         {
             "text": "gravel",
-            "weight": 2
+            "weight": 4
         },
         {
             "text": "stone",
-            "weight": 2
+            "weight": 4
         },
         {
             "text": "rock",
-            "weight": 1
+            "weight": 2
         },
         {
             "text": "seaweed",
-            "weight": 1
+            "weight": 2
         }
     ],
     "pots": [
-        "I met a traveller from an antique land, Who said—“Two vast and trunkless legs of stone Stand in the desert.... Near them, on the sand, Half sunk a shattered visage lies, whose frown, And wrinkled lip, and sneer of cold command, Tell that its sculptor well those passions read Which yet survive, stamped on these lifeless things, The hand that mocked them, and the heart that fed; And on the pedestal, these words appear: My name is Ozymandias, King of Kings; Look on my Works, ye Mighty, and despair! Nothing beside remains. Round the decay Of that colossal Wreck, boundless and bare The lone and level sands stretch far away.”"
-    ] 
+        "I met a traveller from an antique land, Who said—“Two vast and trunkless legs of stone Stand in the desert.... Near them, on the sand, Half sunk a shattered visage lies, whose frown, And wrinkled lip, and sneer of cold command, Tell that its sculptor well those passions read Which yet survive, stamped on these lifeless things, The hand that mocked them, and the heart that fed; And on the pedestal, these words appear: My name is Ozymandias, King of Kings; Look on my Works, ye Mighty, and despair! Nothing beside remains. Round the decay Of that colossal Wreck, boundless and bare The lone and level sands stretch far away.”",
+        "you find me sandblistered. maybe i am the thumbnail of a giant. maybe i am a map in braille leading to the vault where every lost language sleeps, or maybe i am the key. or a dislocated tongue, & you put me in a mouth that isn't mine & let me garble out alien shapes; you put me to your car & hear god's fingerprints coming down the phone, hieroglyphs dancing like soundwaves. decide. you want to turn symbol into sound, to pronounce geometry's hidden equations? you want to transliterate a handprint, or to know the phonetics of colour, or to lip-read an echo? do you want to reconstruct unravelled syntax, or glimpse punctuation in a movement? here, take me apart for answers. i could drip-feed you ciphertext until you decrypted my jigsaw-piece syllables, words encoded, meaning lurking behind each grapheme. if you let me / if you help me / it's conditional, you see. i want you to speak me back to life, to inject me with morse for a pulse. i want to be read, to be heard, to be understood. i want an eternity in my symbols, i want you to dissect language & give it its heartbeat back. but/ i fill your mouth with dust. my definition hides itself in the ashes of a burnt library, semantics: noun, three vowels, six consonants, a collection of sounds arranged without meaning. letters deconstructed, sentences undone. your tongue falls asleep, silent alphabets nestle behind your teeth & all the airwaves go quiet. so you never speak my sounds out loud; so my name /////////////// comes apart in your mouth, & your lips part, / & all the syllables fall out. so i looked for a voice & found—only this—myself—language—unwound—only a sound / only a sound / onlyasound / nly s nd",
+        "Who's this moving alive over the moor? An old man seeking and finding a difficulty. Has he remembered his compass his spare socks does he fully intend going in over his knees off the military track from Okehampton? keeping his course through the swamp spaces and pulling the distance around his shoulders and if it rains, if it thunders suddenly where will he shelter looking round and all that lies to hand is his own bones? tussocks, minute flies, wind, wings, roots He consults his map. A huge rain-coloured wilderness. This must be the stones, the sudden movement, the sound of frogs singing in the new year. Who's this issuing from the earth? The Dart, lying low in darkness calls out Who is it? trying to summon itself by speaking …"
+    ]
 }
