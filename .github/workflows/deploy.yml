@@ -15,5 +15,14 @@ jobs:
     steps:
     - uses: actions/checkout@v4
     - name: Build
-      run: cargo build --release
+      run: cargo build --release --target x86_64-unknown-linux-gnu
+    - name: Deploy with rsync
+      uses: burnett01/rsync-deployments@7.0.0
+      with:
+        switches: -avzr --delete
+        path: target/x86_64-unknown-linux-gnu/release/mudlarking-server
+        remote-path: /root/
+        remote-host: worldenddisk.com
+        remote_user: ${{ secrets.SSH_USER }}
+        remote_key: ${{ secrets.SSH_KEY }}
     
