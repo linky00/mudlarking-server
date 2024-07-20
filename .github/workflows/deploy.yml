@@ -19,10 +19,10 @@ jobs:
     - name: Deploy with rsync
       uses: burnett01/rsync-deployments@7.0.0
       with:
-        switches: -avzr --delete
+        switches: -avzr
         path: target/x86_64-unknown-linux-gnu/release/mudlarking-server
-        remote-path: /root/
-        remote-host: worldenddisk.com
+        remote_path: /root/mudlarking_server
+        remote_host: worldenddisk.com
         remote_user: ${{ secrets.SSH_USER }}
         remote_key: ${{ secrets.SSH_KEY }}
     
