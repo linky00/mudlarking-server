@@ -2,7 +2,7 @@ use rand::{distributions::{Distribution, WeightedIndex}, seq::SliceRandom, threa
 use serde::{Deserialize, Serialize};
 
 const MIN_WORDS: i32 = 2;
-const MAX_WORDS: i32 = 5;
+const MAX_WORDS: i32 = 4;
 
 #[derive(Serialize, Deserialize)]
 struct Corpus {
