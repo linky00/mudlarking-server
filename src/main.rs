@@ -4,7 +4,6 @@ use axum::{
     Json,
     Router,
 };
-use std::fs;
 use tower_http::cors::CorsLayer;
 use crate::shore::*;
 use crate::text_table::*;
@@ -16,7 +15,7 @@ const PORT: u16 = 5555;
 
 #[tokio::main]
 async fn main() {
-    let corpus_json = fs::read_to_string("corpus.json").expect("Should be able to read file");
+    let corpus_json = include_str!("corpus.json");
     let text_table = TextTable::from_json(&corpus_json);
 
     let app = Router::new()
