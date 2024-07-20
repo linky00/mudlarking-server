@@ -31,7 +31,7 @@ pub struct TextTable {
 
 impl TextTable {
     pub fn from_json(json: &str) -> Self {
-        TextTable::from_corpus(serde_json::from_str(json).expect("JSON is formatted correctly"))
+        TextTable::from_corpus(serde_json::from_str(json).expect("JSON should be formatted correctly"))
     }
 
     fn from_corpus(corpus: Corpus) -> Self {
@@ -49,13 +49,13 @@ impl TextTable {
     }
 
     pub fn get_text(&self) -> String {
-        let dist = WeightedIndex::new(self.weights.clone()).expect("The weights are correct");
+        let dist = WeightedIndex::new(self.weights.clone()).expect("The weights should be correct");
         let mut rng = thread_rng();
 
         match &self.possibilities[dist.sample(&mut rng)] {
             TextPossibility::Waste(text) => text.to_string(),
             TextPossibility::Pot => {
-                let pot = self.split_pots.choose(&mut rng).expect("The list is not empty");
+                let pot = self.split_pots.choose(&mut rng).expect("The list should not be empty");
                 let length = rng.gen_range(MIN_WORDS..=MAX_WORDS) as usize;
                 let start = rng.gen_range(0..(pot.len() - length));
                 pot[start..(start + length)].join(" ")
