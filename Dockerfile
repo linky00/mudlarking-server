@@ -5,8 +5,8 @@ COPY . .
 
 RUN cargo install --path .
 
-ENV PORT=4000
+ENV PORT=5555
 
-EXPOSE 4000
+EXPOSE 5555
 
 CMD ["mudlarking-server"]
