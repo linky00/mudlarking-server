@@ -1,6 +1,6 @@
 FROM rust
 
-WORKDIR /usr/src/mudlarking-server
+WORKDIR /app
 COPY . .
 
 RUN cargo install --path .
