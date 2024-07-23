@@ -29,7 +29,7 @@ async fn main() {
 }
 
 async fn make_shore(State(text_table): State<TextTable>) -> Json<Shore> {
-    let shore = Shore::new(25, 200, text_table);
+    let shore = Shore::new(20, 200, text_table);
     println!("{shore}");
     Json(shore)
 }
