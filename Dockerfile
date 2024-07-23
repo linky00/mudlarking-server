@@ -1,6 +1,6 @@
 FROM rust
 
-WORKDIR /usr/src/app
+WORKDIR /usr/src/mudlarking-server
 COPY . .
 
 RUN cargo install --path .
@@ -9,4 +9,4 @@ ENV PORT=4000
 
 EXPOSE 4000
 
-CMD ["app"]
+CMD ["mudlarking-server"]
