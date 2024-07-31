@@ -43,6 +43,6 @@ async fn main() {
 }
 
 async fn make_shore<'a>(State(app_state): State<Arc<AppState<'a>>>) -> Json<Shore> {
-    let shore = Shore::new(950.0, 200, &app_state.text_table, &app_state.font_sizer);
+    let shore = Shore::new(800.0, 200, &app_state.text_table, &app_state.font_sizer);
     Json(shore)
 }
