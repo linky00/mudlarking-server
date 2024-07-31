@@ -1,4 +1,3 @@
-use std::fmt;
 use serde::Serialize;
 use uuid::Uuid;
 use crate::TextTable;
@@ -23,7 +22,8 @@ impl Shore {
             let mut current_width = 0.0;
             while current_width < width {
                 let text = text_table.get_text();
-                let new_width = font_sizer.get_width(&text, 16.0);
+                let text_squashed = text.replace(' ', "");
+                let new_width = font_sizer.get_width(&text_squashed, 16.0);
                 contents.push(Item::new(text, n, current_width));
                 current_width += new_width;
             };
@@ -32,19 +32,6 @@ impl Shore {
         contents
     }
 }
-
-// impl fmt::Display for Shore {
-//     fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
-//         let mut out = String::new();
-//         for y in 0..self.height {
-//             for x in 0..self.width {
-//                 out = format!("{} {}", out, self.get(x, y).text);
-//             }
-//             out += "\n";
-//         }
-//         write!(f, "{out}")
-//     }
-// }
 
 #[derive(Clone, Serialize)]
 pub struct Item {
