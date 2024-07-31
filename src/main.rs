@@ -39,6 +39,7 @@ async fn main() {
         .layer(CorsLayer::permissive());
 
     let listener = tokio::net::TcpListener::bind(format!("0.0.0.0:{port}")).await.expect(&format!("Can bind to port {port}"));
+    println!("Starting server on port {port}...");
     axum::serve(listener, app).await.expect("Should be able to start server");
 }
 
