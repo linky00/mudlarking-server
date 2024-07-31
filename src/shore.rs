@@ -20,10 +20,13 @@ impl Shore {
 
         for n in 0..(lines) {
             let mut current_width = 0.0;
-            while current_width < width {
+            loop {
                 let text = text_table.get_text();
                 let text_squashed = text.replace(' ', "");
                 let new_width = font_sizer.get_width(&text_squashed, 16.0);
+                if new_width + current_width > width {
+                    break;
+                }
                 contents.push(Item::new(text, n, current_width));
                 current_width += new_width;
             };
