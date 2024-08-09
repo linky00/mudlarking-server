@@ -1,4 +1,8 @@
-use rand::{distributions::{Distribution, WeightedIndex}, seq::SliceRandom, thread_rng, Rng};
+use rand::{
+    distributions::{Distribution, WeightedIndex},
+    seq::SliceRandom,
+    thread_rng, Rng,
+};
 use serde::{Deserialize, Serialize};
 
 const MIN_WORDS: i32 = 2;
@@ -19,7 +23,7 @@ struct CorpusWaste {
 #[derive(Clone)]
 enum TextPossibility {
     Waste(String),
-    Pot
+    Pot,
 }
 
 #[derive(Clone)]
@@ -31,20 +35,28 @@ pub struct TextTable {
 
 impl TextTable {
     pub fn from_json(json: &str) -> Self {
-        TextTable::from_corpus(serde_json::from_str(json).expect("JSON should be formatted correctly"))
+        TextTable::from_corpus(
+            serde_json::from_str(json).expect("JSON should be formatted correctly"),
+        )
     }
 
     fn from_corpus(corpus: Corpus) -> Self {
-        let (mut possibilities, mut weights): (Vec<TextPossibility>, Vec<i32>) = corpus.waste.iter().map(
-            |waste| (TextPossibility::Waste(waste.text.clone()), waste.weight)
-        ).collect();
+        let (mut possibilities, mut weights): (Vec<TextPossibility>, Vec<i32>) = corpus
+            .waste
+            .iter()
+            .map(|waste| (TextPossibility::Waste(waste.text.clone()), waste.weight))
+            .collect();
         possibilities.push(TextPossibility::Pot);
         weights.push(1);
 
         TextTable {
             possibilities,
             weights,
-            split_pots: corpus.pots.iter().map(|pot| pot.split(' ').map(|substr| substr.to_string()).collect()).collect(),
+            split_pots: corpus
+                .pots
+                .iter()
+                .map(|pot| pot.split(' ').map(|substr| substr.to_string()).collect())
+                .collect(),
         }
     }
 
@@ -55,7 +67,10 @@ impl TextTable {
         match &self.possibilities[dist.sample(&mut rng)] {
             TextPossibility::Waste(text) => text.to_string(),
             TextPossibility::Pot => {
-                let pot = self.split_pots.choose(&mut rng).expect("The list should not be empty");
+                let pot = self
+                    .split_pots
+                    .choose(&mut rng)
+                    .expect("The list should not be empty");
                 let length = rng.gen_range(MIN_WORDS..=MAX_WORDS) as usize;
                 let start = rng.gen_range(0..(pot.len() - length));
                 pot[start..(start + length)].join(" ")
