@@ -7,6 +7,8 @@ use rand::random;
 use serde::Serialize;
 use uuid::Uuid;
 
+const WORLEY_FREQ: f64 = 0.007;
+
 #[derive(Serialize)]
 pub struct Shore {
     contents: Vec<Item>,
