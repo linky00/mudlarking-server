@@ -17,7 +17,7 @@ impl WeightedChoice {
 
     pub fn get(&self, at: f64) -> Result<usize, WeightedChoiceError> {
         for (i, weight) in self.cumulative_weights.iter().enumerate() {
-            if at < *weight {
+            if at <= *weight {
                 return Ok(i);
             }
         }
