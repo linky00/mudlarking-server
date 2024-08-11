@@ -2,6 +2,7 @@ use crate::font::*;
 use crate::shore::*;
 use crate::text_table::*;
 use axum::{extract::State, routing::get, Json, Router};
+use dotenv::dotenv;
 use std::{env, sync::Arc};
 use tower_http::cors::CorsLayer;
 
@@ -16,6 +17,8 @@ struct AppState<'a> {
 
 #[tokio::main]
 async fn main() {
+    dotenv().ok();
+
     let font_sizer = font::FontSizer::new(include_bytes!("EBGaramond-Regular.ttf"), 0, 16.0);
 
     let corpus_json = include_str!("corpus.json");
