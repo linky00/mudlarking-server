@@ -49,11 +49,21 @@ async fn main() {
 }
 
 async fn get_shore(State(app_state): State<Arc<AppState<'_>>>) -> Json<Shore> {
-    let shore = Shore::new(SHORE_WIDTH, SHORE_HEIGHT, &app_state.text_table, &app_state.font_sizer);
+    let shore = Shore::new(
+        SHORE_WIDTH,
+        SHORE_HEIGHT,
+        &app_state.text_table,
+        &app_state.font_sizer,
+    );
     Json(shore)
 }
 
 async fn get_debug_shore(State(app_state): State<Arc<AppState<'_>>>) -> Json<DebugShore> {
-    let shore = DebugShore::new(SHORE_WIDTH, SHORE_HEIGHT, &app_state.text_table, &app_state.font_sizer);
+    let shore = DebugShore::new(
+        SHORE_WIDTH,
+        SHORE_HEIGHT,
+        &app_state.text_table,
+        &app_state.font_sizer,
+    );
     Json(shore)
 }
