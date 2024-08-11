@@ -1,6 +1,4 @@
-use crate::font::*;
-use crate::shore::*;
-use crate::text_table::*;
+use crate::{font::*, shore::*, text_table::*};
 use axum::{extract::State, routing::get, Json, Router};
 use dotenv::dotenv;
 use std::{env, sync::Arc};

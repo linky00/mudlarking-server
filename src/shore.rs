@@ -1,8 +1,8 @@
-use crate::FontSizer;
-use crate::TextTable;
-use noise::core::worley::{distance_functions::chebyshev, ReturnType};
-use noise::NoiseFn;
-use noise::Worley;
+use crate::{FontSizer, TextTable};
+use noise::{
+    core::worley::{distance_functions::chebyshev, ReturnType},
+    NoiseFn, Worley,
+};
 use rand::random;
 use serde::Serialize;
 use uuid::Uuid;
@@ -30,7 +30,7 @@ impl Shore {
         let worley = Worley::new(random())
             .set_distance_function(chebyshev)
             .set_return_type(ReturnType::Value)
-            .set_frequency(0.002);
+            .set_frequency(WORLEY_FREQ);
 
         let mut contents = Vec::new();
         let lines = (max_height / font_sizer.get_height()) as u16;
