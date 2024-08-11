@@ -1,13 +1,15 @@
 use crate::{FontSizer, TextTable};
 use noise::{
     core::worley::{distance_functions::chebyshev, ReturnType},
-    NoiseFn, Worley,
+    Fbm, NoiseFn, Perlin, Worley,
 };
 use rand::random;
 use serde::Serialize;
 use uuid::Uuid;
 
 const WORLEY_FREQ: f64 = 0.007;
+const WAVE_WIDTH: f32 = 60.0;
+const PERLIN_COEF: f64 = 0.15;
 
 type Contents = Vec<Item>;
 
@@ -24,9 +26,10 @@ fn generate_contents(
         .set_distance_function(chebyshev)
         .set_return_type(ReturnType::Value)
         .set_frequency(WORLEY_FREQ);
+    let perlin = Fbm::<Perlin>::new(random());
     let lines = (max_height / font_sizer.get_height()) as u16;
     for n in 0..(lines) {
-        let mut x = 0.0;
+        let mut x = (perlin.get([n as f64 * PERLIN_COEF, 0.0]) as f32 * 0.5 + 0.5) * WAVE_WIDTH;
         let y = n as f32 * font_sizer.get_height();
         loop {
             let value = worley.get([x.into(), y.into()]);
