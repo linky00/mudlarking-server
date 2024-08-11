@@ -19,13 +19,13 @@ pub struct TextTable {
 }
 
 pub struct Region {
-    name: String,
+    pub name: String,
     possibilities: Vec<TextPossibility>,
     weighted_index: WeightedIndex<u32>,
 }
 
 enum TextPossibility {
-    Waste(String),
+    Ground(String),
     Pot,
 }
 
@@ -46,7 +46,7 @@ impl TextTable {
                 let (mut possibilities, mut weights): (Vec<TextPossibility>, Vec<u32>) = region
                     .items
                     .iter()
-                    .map(|waste| (TextPossibility::Waste(waste.text.clone()), waste.weight))
+                    .map(|ground| (TextPossibility::Ground(ground.text.clone()), ground.weight))
                     .collect();
                 possibilities.push(TextPossibility::Pot);
                 weights.push(1);
@@ -74,12 +74,9 @@ impl TextTable {
 
     pub fn get_text(&self, region_at: f64) -> String {
         let mut rng = thread_rng();
-        let region = &self.regions[self
-            .weighted_choice
-            .get(region_at)
-            .expect("region_at should be between 0 and 1")];
+        let region = self.get_region(region_at);
         match &region.possibilities[region.weighted_index.sample(&mut rng)] {
-            TextPossibility::Waste(text) => text.to_string(),
+            TextPossibility::Ground(text) => text.to_string(),
             TextPossibility::Pot => {
                 let pot = self
                     .split_pots
@@ -90,5 +87,12 @@ impl TextTable {
                 pot[start..(start + length)].join(" ")
             }
         }
+    }
+
+    pub fn get_region(&self, region_at: f64) -> &Region {
+        &self.regions[self
+            .weighted_choice
+            .get(region_at)
+            .unwrap_or_else(|_| panic!("{region_at} should be between 0 and 1"))]
     }
 }
