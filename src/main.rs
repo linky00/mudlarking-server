@@ -16,10 +16,10 @@ struct AppState<'a> {
 
 #[tokio::main]
 async fn main() {
-    let font_sizer = font::FontSizer::new(include_bytes!("EBGaramond-Regular.ttf"), 0);
+    let font_sizer = font::FontSizer::new(include_bytes!("EBGaramond-Regular.ttf"), 0, 16.0);
 
     let corpus_json = include_str!("corpus.json");
-    let text_table = TextTable::from_json(&corpus_json);
+    let text_table = TextTable::from_json(corpus_json);
 
     let app_state = AppState {
         font_sizer,
@@ -42,7 +42,7 @@ async fn main() {
         .expect("Should be able to start server");
 }
 
-async fn make_shore<'a>(State(app_state): State<Arc<AppState<'a>>>) -> Json<Shore> {
-    let shore = Shore::new(800.0, 200, &app_state.text_table, &app_state.font_sizer);
+async fn make_shore(State(app_state): State<Arc<AppState<'_>>>) -> Json<Shore> {
+    let shore = Shore::new(800.0, 1200.0, &app_state.text_table, &app_state.font_sizer);
     Json(shore)
 }

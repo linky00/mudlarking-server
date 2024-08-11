@@ -1,12 +1,11 @@
 use crate::FontSizer;
 use crate::TextTable;
-use noise::{Fbm, NoiseFn, Perlin};
-use rand;
+use noise::core::worley::{distance_functions::chebyshev, ReturnType};
+use noise::NoiseFn;
+use noise::Worley;
+use rand::random;
 use serde::Serialize;
 use uuid::Uuid;
-
-const WAVE_WIDTH: f32 = 80.0;
-const PERLIN_COEF: f64 = 0.1;
 
 #[derive(Serialize)]
 pub struct Shore {
@@ -14,32 +13,39 @@ pub struct Shore {
 }
 
 impl Shore {
-    pub fn new(width: f32, lines: u16, text_table: &TextTable, font_sizer: &FontSizer) -> Shore {
+    pub fn new(width: f32, height: f32, text_table: &TextTable, font_sizer: &FontSizer) -> Shore {
         Shore {
-            contents: Self::generate_contents(width, lines, text_table, font_sizer),
+            contents: Self::generate_contents(width, height, text_table, font_sizer),
         }
     }
 
     fn generate_contents(
         max_width: f32,
-        lines: u16,
+        max_height: f32,
         text_table: &TextTable,
         font_sizer: &FontSizer,
     ) -> Vec<Item> {
+        let worley = Worley::new(random())
+            .set_distance_function(chebyshev)
+            .set_return_type(ReturnType::Value)
+            .set_frequency(0.002);
+
         let mut contents = Vec::new();
-        let noise = Fbm::<Perlin>::new(rand::random());
+        let lines = (max_height / font_sizer.get_height()) as u16;
         for n in 0..(lines) {
-            let mut total_width =
-                (noise.get([n as f64 * PERLIN_COEF, 0.0]) as f32 * 0.5 + 0.5) * WAVE_WIDTH;
+            let mut x = 0.0;
+            let y = n as f32 * font_sizer.get_height();
             loop {
-                let text = text_table.get_text();
-                let text_squashed = text.replace(' ', "");
-                let new_width = font_sizer.get_width(&text_squashed, 16.0);
-                if new_width + total_width > max_width {
+                let value = worley.get([x.into(), y.into()]);
+                let value = value * 0.5 + 0.5;
+                let text = text_table.get_text(value);
+                let text = text.replace(' ', "");
+                let new_width = font_sizer.get_width(&text);
+                if new_width + x > max_width {
                     break;
                 }
-                contents.push(Item::new(text, n, total_width));
-                total_width += new_width;
+                contents.push(Item::new(text, n, x));
+                x += new_width;
             }
         }
 

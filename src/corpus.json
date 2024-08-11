@@ -1,28 +1,42 @@
 {
-    "waste": [
+    "regions": [
         {
-            "text": "mud",
-            "weight": 40
+            "name": "muddy",
+            "weight": 2,
+            "items": [
+                {
+                    "text": "mud",
+                    "weight": 50
+                }
+            ]
         },
         {
-            "text": "sand",
-            "weight": 4
+            "name": "sandy",
+            "weight": 1,
+            "items": [
+                {
+                    "text": "sand",
+                    "weight": 50
+                }
+            ]
         },
         {
-            "text": "gravel",
-            "weight": 4
-        },
-        {
-            "text": "stone",
-            "weight": 4
-        },
-        {
-            "text": "rock",
-            "weight": 2
-        },
-        {
-            "text": "seaweed",
-            "weight": 2
+            "name": "stoney",
+            "weight": 1,
+            "items": [
+                {
+                    "text": "rock",
+                    "weight": 20
+                },
+                {
+                    "text": "stone",
+                    "weight": 20
+                },
+                {
+                    "text": "pebble",
+                    "weight": 10
+                }
+            ]
         }
     ],
     "pots": [

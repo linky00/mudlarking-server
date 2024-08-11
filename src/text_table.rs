@@ -1,36 +1,32 @@
+use corpus::Corpus;
 use rand::{
     distributions::{Distribution, WeightedIndex},
     seq::SliceRandom,
     thread_rng, Rng,
 };
-use serde::{Deserialize, Serialize};
+use weighted_choice::WeightedChoice;
 
-const MIN_WORDS: i32 = 2;
-const MAX_WORDS: i32 = 4;
+mod corpus;
+mod weighted_choice;
 
-#[derive(Serialize, Deserialize)]
-struct Corpus {
-    waste: Vec<CorpusWaste>,
-    pots: Vec<String>,
+const MIN_WORDS: u32 = 2;
+const MAX_WORDS: u32 = 4;
+
+pub struct TextTable {
+    regions: Vec<Region>,
+    weighted_choice: WeightedChoice,
+    split_pots: Vec<Vec<String>>,
 }
 
-#[derive(Serialize, Deserialize)]
-struct CorpusWaste {
-    text: String,
-    weight: i32,
+pub struct Region {
+    name: String,
+    possibilities: Vec<TextPossibility>,
+    weighted_index: WeightedIndex<u32>,
 }
 
-#[derive(Clone)]
 enum TextPossibility {
     Waste(String),
     Pot,
-}
-
-#[derive(Clone)]
-pub struct TextTable {
-    possibilities: Vec<TextPossibility>,
-    weights: Vec<i32>,
-    split_pots: Vec<Vec<String>>,
 }
 
 impl TextTable {
@@ -41,17 +37,33 @@ impl TextTable {
     }
 
     fn from_corpus(corpus: Corpus) -> Self {
-        let (mut possibilities, mut weights): (Vec<TextPossibility>, Vec<i32>) = corpus
-            .waste
+        let mut region_weights: Vec<u32> = vec![];
+        let regions: Vec<Region> = corpus
+            .regions
             .iter()
-            .map(|waste| (TextPossibility::Waste(waste.text.clone()), waste.weight))
+            .map(|region| {
+                region_weights.push(region.weight);
+                let (mut possibilities, mut weights): (Vec<TextPossibility>, Vec<u32>) = region
+                    .items
+                    .iter()
+                    .map(|waste| (TextPossibility::Waste(waste.text.clone()), waste.weight))
+                    .collect();
+                possibilities.push(TextPossibility::Pot);
+                weights.push(1);
+                let weighted_index =
+                    WeightedIndex::new(weights).expect("The weights should be correct");
+                Region {
+                    name: region.name.clone(),
+                    possibilities,
+                    weighted_index,
+                }
+            })
             .collect();
-        possibilities.push(TextPossibility::Pot);
-        weights.push(1);
+        let weighted_choice = WeightedChoice::new(region_weights);
 
         TextTable {
-            possibilities,
-            weights,
+            regions,
+            weighted_choice,
             split_pots: corpus
                 .pots
                 .iter()
@@ -60,11 +72,13 @@ impl TextTable {
         }
     }
 
-    pub fn get_text(&self) -> String {
-        let dist = WeightedIndex::new(self.weights.clone()).expect("The weights should be correct");
+    pub fn get_text(&self, region_at: f64) -> String {
         let mut rng = thread_rng();
-
-        match &self.possibilities[dist.sample(&mut rng)] {
+        let region = &self.regions[self
+            .weighted_choice
+            .get(region_at)
+            .expect("region_at should be between 0 and 1")];
+        match &region.possibilities[region.weighted_index.sample(&mut rng)] {
             TextPossibility::Waste(text) => text.to_string(),
             TextPossibility::Pot => {
                 let pot = self
