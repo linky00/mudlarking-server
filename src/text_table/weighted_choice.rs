@@ -21,9 +21,9 @@ impl WeightedChoice {
                 return Ok(i);
             }
         }
-        Err(WeightedChoiceError{})
+        Err(WeightedChoiceError {})
     }
 }
 
 #[derive(Debug)]
-pub struct WeightedChoiceError{}
+pub struct WeightedChoiceError {}
