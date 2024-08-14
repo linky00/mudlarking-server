@@ -13,8 +13,7 @@ const SHORE_HEIGHT: f32 = 1200.0;
 const FONT_SIZE: f32 = 16.0;
 
 struct AppState<'a> {
-    font_sizer: FontSizer<'a>,
-    text_table: TextTable,
+    text_table: TextTable<'a>,
 }
 
 #[tokio::main]
@@ -24,10 +23,9 @@ async fn main() {
     let font_sizer = font::FontSizer::new(include_bytes!("EBGaramond-Regular.ttf"), 0, FONT_SIZE);
 
     let corpus_json = include_str!("corpus.json");
-    let text_table = TextTable::from_json(corpus_json);
+    let text_table = TextTable::from_json(corpus_json, font_sizer);
 
     let app_state = AppState {
-        font_sizer,
         text_table,
     };
 
@@ -53,7 +51,6 @@ async fn get_shore(State(app_state): State<Arc<AppState<'_>>>) -> Json<Shore> {
         SHORE_WIDTH,
         SHORE_HEIGHT,
         &app_state.text_table,
-        &app_state.font_sizer,
     );
     Json(shore)
 }
@@ -63,7 +60,6 @@ async fn get_debug_shore(State(app_state): State<Arc<AppState<'_>>>) -> Json<Deb
         SHORE_WIDTH,
         SHORE_HEIGHT,
         &app_state.text_table,
-        &app_state.font_sizer,
     );
     Json(shore)
 }

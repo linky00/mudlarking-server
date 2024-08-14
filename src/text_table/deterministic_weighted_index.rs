@@ -1,29 +1,29 @@
-pub struct WeightedChoice {
-    cumulative_weights: Vec<f64>,
+pub struct DeterministicWeightedIndex {
+    cumulative_weights: Vec<f32>,
 }
 
-impl WeightedChoice {
+impl DeterministicWeightedIndex {
     pub fn new(weights: Vec<u32>) -> Self {
         let max_weight: u32 = weights.iter().sum();
         let mut cumulative_weights = vec![];
         let mut acc = 0.0;
         for weight in weights {
-            let weight = weight as f64 / max_weight as f64;
+            let weight = weight as f32 / max_weight as f32;
             acc += weight;
             cumulative_weights.push(acc);
         }
-        WeightedChoice { cumulative_weights }
+        DeterministicWeightedIndex { cumulative_weights }
     }
 
-    pub fn get(&self, at: f64) -> Result<usize, WeightedChoiceError> {
+    pub fn sample(&self, at: f32) -> Result<usize, DeterministicWeightedIndexError> {
         for (i, weight) in self.cumulative_weights.iter().enumerate() {
             if at <= *weight {
                 return Ok(i);
             }
         }
-        Err(WeightedChoiceError {})
+        Err(DeterministicWeightedIndexError {})
     }
 }
 
 #[derive(Debug)]
-pub struct WeightedChoiceError {}
+pub struct DeterministicWeightedIndexError {}

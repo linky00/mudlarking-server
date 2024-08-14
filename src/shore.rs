@@ -1,4 +1,4 @@
-use crate::{FontSizer, TextTable};
+use crate::TextTable;
 use noise::{
     core::worley::{distance_functions::chebyshev, ReturnType},
     Fbm, NoiseFn, Perlin, Worley,
@@ -8,8 +8,8 @@ use serde::Serialize;
 use uuid::Uuid;
 
 const WORLEY_FREQ: f64 = 0.007;
-const WAVE_WIDTH: f32 = 60.0;
-const PERLIN_COEF: f64 = 0.15;
+const WAVE_WIDTH: f32 = 80.0;
+const PERLIN_COEF: f64 = 0.13;
 
 type Contents = Vec<Item>;
 
@@ -17,7 +17,6 @@ fn generate_contents(
     max_width: f32,
     max_height: f32,
     text_table: &TextTable,
-    font_sizer: &FontSizer,
     debug: bool,
 ) -> (Contents, Option<Contents>) {
     let mut contents = Contents::new();
@@ -27,20 +26,19 @@ fn generate_contents(
         .set_return_type(ReturnType::Value)
         .set_frequency(WORLEY_FREQ);
     let perlin = Fbm::<Perlin>::new(random());
-    let lines = (max_height / font_sizer.get_height()) as u16;
+    let lines = (max_height / text_table.font_sizer.get_height()) as u32;
     for n in 0..(lines) {
         let mut x = (perlin.get([n as f64 * PERLIN_COEF, 0.0]) as f32 * 0.5 + 0.5) * WAVE_WIDTH;
-        let y = n as f32 * font_sizer.get_height();
+        let y = n as f32 * text_table.font_sizer.get_height();
         loop {
-            let value = worley.get([x.into(), y.into()]);
+            let value = worley.get([x.into(), y.into()]) as f32;
             let value = value * 0.5 + 0.5;
-            let text = text_table.get_text(value);
-            let squashed_text = text.replace(' ', "");
-            let new_width = font_sizer.get_width(&squashed_text);
+            let text_table_item = text_table.get_item(value, max_width - x);
+            let new_width = text_table_item.width;
             if new_width + x > max_width {
                 break;
             }
-            contents.push(Item::new(text, n, x));
+            contents.push(Item::new(text_table_item.text, n, x));
             if let Some(debug_contents) = &mut debug_contents {
                 debug_contents.push(Item::new(text_table.get_region(value).name.clone(), n, x));
             }
@@ -58,9 +56,9 @@ pub struct Shore {
 }
 
 impl Shore {
-    pub fn new(width: f32, height: f32, text_table: &TextTable, font_sizer: &FontSizer) -> Self {
+    pub fn new(width: f32, height: f32, text_table: &TextTable) -> Self {
         Shore {
-            contents: generate_contents(width, height, text_table, font_sizer, false).0,
+            contents: generate_contents(width, height, text_table, false).0,
         }
     }
 }
@@ -73,8 +71,8 @@ pub struct DebugShore {
 }
 
 impl DebugShore {
-    pub fn new(width: f32, height: f32, text_table: &TextTable, font_sizer: &FontSizer) -> Self {
-        let contents_with_debug = generate_contents(width, height, text_table, font_sizer, true);
+    pub fn new(width: f32, height: f32, text_table: &TextTable) -> Self {
+        let contents_with_debug = generate_contents(width, height, text_table, true);
         DebugShore {
             contents: contents_with_debug.0,
             debug_contents: contents_with_debug.1,
@@ -85,13 +83,13 @@ impl DebugShore {
 #[derive(Clone, Serialize)]
 pub struct Item {
     text: String,
-    line: u16,
+    line: u32,
     offset: f32,
     id: Uuid,
 }
 
 impl Item {
-    pub fn new(text: String, line: u16, offset: f32) -> Item {
+    pub fn new(text: String, line: u32, offset: f32) -> Item {
         Item {
             text,
             line,

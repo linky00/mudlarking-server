@@ -11,6 +11,7 @@ pub struct Region {
     pub name: String,
     pub weight: u32,
     pub items: Vec<Item>,
+    pub pot_chance: f32,
 }
 
 #[derive(Deserialize)]

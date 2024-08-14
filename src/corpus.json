@@ -6,9 +6,10 @@
             "items": [
                 {
                     "text": "mud",
-                    "weight": 50
+                    "weight": 1
                 }
-            ]
+            ],
+            "pot_chance": 0.04
         },
         {
             "name": "sandy",
@@ -16,9 +17,10 @@
             "items": [
                 {
                     "text": "sand",
-                    "weight": 50
+                    "weight": 1
                 }
-            ]
+            ],
+            "pot_chance": 0.02
         },
         {
             "name": "stoney",
@@ -26,17 +28,18 @@
             "items": [
                 {
                     "text": "rock",
-                    "weight": 20
+                    "weight": 1
                 },
                 {
                     "text": "stone",
-                    "weight": 20
+                    "weight": 1
                 },
                 {
                     "text": "pebble",
-                    "weight": 10
+                    "weight": 1
                 }
-            ]
+            ],
+            "pot_chance": 0.01
         }
     ],
     "pots": [
