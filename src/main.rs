@@ -25,9 +25,7 @@ async fn main() {
     let corpus_json = include_str!("corpus.json");
     let text_table = TextTable::from_json(corpus_json, font_sizer);
 
-    let app_state = AppState {
-        text_table,
-    };
+    let app_state = AppState { text_table };
 
     let port = env::var("PORT").expect("'PORT' env should be set");
 
@@ -47,19 +45,11 @@ async fn main() {
 }
 
 async fn get_shore(State(app_state): State<Arc<AppState<'_>>>) -> Json<Shore> {
-    let shore = Shore::new(
-        SHORE_WIDTH,
-        SHORE_HEIGHT,
-        &app_state.text_table,
-    );
+    let shore = Shore::new(SHORE_WIDTH, SHORE_HEIGHT, &app_state.text_table);
     Json(shore)
 }
 
 async fn get_debug_shore(State(app_state): State<Arc<AppState<'_>>>) -> Json<DebugShore> {
-    let shore = DebugShore::new(
-        SHORE_WIDTH,
-        SHORE_HEIGHT,
-        &app_state.text_table,
-    );
+    let shore = DebugShore::new(SHORE_WIDTH, SHORE_HEIGHT, &app_state.text_table);
     Json(shore)
 }
