@@ -2,7 +2,7 @@
     "regions": [
         {
             "name": "muddy",
-            "weight": 2,
+            "weight": 10,
             "items": [
                 {
                     "text": "mud",
@@ -24,7 +24,7 @@
         },
         {
             "name": "stoney",
-            "weight": 1,
+            "weight": 5,
             "items": [
                 {
                     "text": "rock",

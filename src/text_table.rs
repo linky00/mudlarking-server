@@ -6,6 +6,7 @@ use rand::{
     seq::SliceRandom,
     thread_rng, Rng,
 };
+use std::collections::HashMap;
 
 mod corpus;
 mod deterministic_weighted_index;
@@ -29,6 +30,7 @@ pub struct Item {
 
 pub struct TextTable<'a> {
     regions: Vec<Region>,
+    region_idx_by_name: HashMap<String, usize>,
     weighted_index: DeterministicWeightedIndex,
     split_pots: Vec<Vec<String>>,
     pub font_sizer: FontSizer<'a>,
@@ -78,6 +80,11 @@ impl<'a> TextTable<'a> {
                 }
             })
             .collect();
+        let region_idx_by_name: HashMap<String, usize> = regions
+            .iter()
+            .enumerate()
+            .map(|(i, region)| (region.name.clone(), i))
+            .collect();
         let weighted_index = DeterministicWeightedIndex::new(region_weights);
         let split_pots = corpus
             .pots
@@ -87,26 +94,36 @@ impl<'a> TextTable<'a> {
 
         TextTable {
             regions,
+            region_idx_by_name,
             weighted_index,
             split_pots,
             font_sizer,
         }
     }
 
-    pub fn get_item(&self, region_at: f32, max_width: f32) -> Item {
-        let region = self.get_region(region_at);
-        if thread_rng().gen::<f32>() < region.pot_chance {
-            self.get_sherd(&region, max_width, DEFAULT_MAX_WORDS)
-        } else {
-            self.get_ground(&region, max_width)
-        }
+    pub fn get_item_by_value(&self, region_value: f32, max_width: f32) -> Item {
+        let region = self.get_region_by_value(region_value);
+        self.get_item(region, max_width)
     }
 
-    pub fn get_region(&self, region_at: f32) -> &Region {
+    pub fn get_region_by_value(&self, region_value: f32) -> &Region {
         &self.regions[self
             .weighted_index
-            .sample(region_at)
-            .unwrap_or_else(|_| panic!("{region_at} should be between 0 and 1"))]
+            .sample(region_value)
+            .unwrap_or_else(|_| panic!("{region_value} should be between 0 and 1"))]
+    }
+
+    pub fn get_item_by_name(&self, region_name: &str, max_width: f32) -> Option<Item> {
+        let region = &self.regions[*self.region_idx_by_name.get(region_name)?];
+        Some(self.get_item(region, max_width))
+    }
+
+    fn get_item(&self, region: &Region, max_width: f32) -> Item {
+        if thread_rng().gen::<f32>() < region.pot_chance {
+            self.get_sherd(region, max_width, DEFAULT_MAX_WORDS)
+        } else {
+            self.get_ground(region, max_width)
+        }
     }
 
     fn get_sherd(&self, region: &Region, max_width: f32, max_words: u32) -> Item {

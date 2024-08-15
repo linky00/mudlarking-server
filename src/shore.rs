@@ -9,7 +9,8 @@ use uuid::Uuid;
 
 const WORLEY_FREQ: f64 = 0.007;
 const WAVE_WIDTH: f32 = 80.0;
-const PERLIN_COEF: f64 = 0.13;
+const PERLIN_COEF: f64 = 0.06;
+const SHORE_WIDTH: f32 = 60.0;
 
 type Contents = Vec<Item>;
 
@@ -28,19 +29,25 @@ fn generate_contents(
     let perlin = Fbm::<Perlin>::new(random());
     let lines = (max_height / text_table.font_sizer.get_height()) as u32;
     for n in 0..(lines) {
-        let mut x = (perlin.get([n as f64 * PERLIN_COEF, 0.0]) as f32 * 0.5 + 0.5) * WAVE_WIDTH;
+        let shore_offset = (perlin.get([n as f64 * PERLIN_COEF, 0.0]) as f32 * 0.5 + 0.5) * WAVE_WIDTH;
+        let mut x = shore_offset;
         let y = n as f32 * text_table.font_sizer.get_height();
         loop {
             let value = worley.get([x.into(), y.into()]) as f32;
             let value = value * 0.5 + 0.5;
-            let text_table_item = text_table.get_item(value, max_width - x);
+            let sandy = x - shore_offset < SHORE_WIDTH;
+            let text_table_item = if sandy {
+                text_table.get_item_by_name("sandy", max_width - x).expect("'sandy' should be a region")
+            } else {
+                text_table.get_item_by_value(value, max_width - x)
+            };
             let new_width = text_table_item.width;
             if new_width + x > max_width {
                 break;
             }
             contents.push(Item::new(text_table_item.text, n, x));
             if let Some(debug_contents) = &mut debug_contents {
-                debug_contents.push(Item::new(text_table.get_region(value).name.clone(), n, x));
+                debug_contents.push(Item::new(text_table.get_region_by_value(value).name.clone(), n, x));
             }
             x += new_width;
         }
